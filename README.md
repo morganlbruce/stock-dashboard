@@ -6,3 +6,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 python app.py
 ```
+
+![image](https://github.com/morganlbruce/stock-dashboard/assets/107445201/9b1aa36a-1b5e-4f6e-b806-8dc491475abb)
+
