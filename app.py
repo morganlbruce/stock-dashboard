@@ -28,9 +28,9 @@ def draw_figure():
                     config={
                         # 'displayModeBar': False
                     }
-                ) 
+                )
             ])
-        ),  
+        ), 
     ])
 
 # Text field
@@ -41,7 +41,7 @@ def draw_sidebar():
             dbc.CardBody([
                 html.Div([
                     html.H2("Text"),
-                ], style={'textAlign': 'center'}) 
+                ], style={'textAlign': 'center'})
             ])
         ),
     ])
