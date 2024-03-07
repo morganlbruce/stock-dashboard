@@ -30,7 +30,7 @@ def draw_figure():
                     }
                 )
             ])
-        ), 
+        ),
     ])
 
 # Text field
