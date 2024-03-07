@@ -1,9 +1,10 @@
 """File to run dashboard server"""
 
+from ctypes.wintypes import RGB
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go  
 
 app = Dash(__name__)
 
@@ -12,28 +13,36 @@ df = df[df['Name'] == 'AAL']
 
 app = Dash(external_stylesheets=[dbc.themes.SLATE])
 
-def draw_figure():
+
+def draw_figure(df):
     """Plot graph"""
-    return  html.Div([
+    data = [{
+        'type': 'scatter',
+        'x': df['date'].values,
+        'y': df['open'].values,
+    }]
+    layout = go.Layout(
+        title=go.layout.Title(text="S&P 500 Stock Prices"),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font_color='rgb(235,235,225)'
+    )
+    fig = go.Figure(
+        data=data,
+        layout=layout,
+    )
+
+    return html.Div([
         dbc.Card(
             dbc.CardBody([
                 dcc.Graph(
-                    figure=px.line(
-                        df, x="date", y="open",
-                    ).update_layout(
-                        template='plotly_dark',
-                        plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                        paper_bgcolor= 'rgba(0, 0, 0, 0)',
-                    ),
-                    config={
-                        # 'displayModeBar': False
-                    }
+                    figure=fig,
                 )
             ])
         ),
     ])
 
-# Text field
+
 def draw_sidebar():
     """Setup sidebar dropdowns / info"""
     return html.Div([
@@ -77,7 +86,7 @@ app.layout = html.Div([
                     draw_sidebar()
                 ], width=3),
                 dbc.Col([
-                    draw_figure()
+                    draw_figure(df)
                 ], width=9),
             ], align='center'),
             html.Br(),
