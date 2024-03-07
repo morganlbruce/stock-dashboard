@@ -1,3 +1,5 @@
+"""File to run dashboard server"""
+
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -5,24 +7,26 @@ import plotly.express as px
 
 app = Dash(__name__)
 
-df = px.data.iris()
+df = pd.read_csv(r'data/all_stocks_5yr.csv')
+df = df[df['Name'] == 'AAL']
 
 app = Dash(external_stylesheets=[dbc.themes.SLATE])
 
-def drawFigure():
+def draw_figure():
+    """Plot graph"""
     return  html.Div([
         dbc.Card(
             dbc.CardBody([
                 dcc.Graph(
-                    figure=px.bar(
-                        df, x="sepal_width", y="sepal_length", color="species"
+                    figure=px.line(
+                        df, x="date", y="open",
                     ).update_layout(
                         template='plotly_dark',
                         plot_bgcolor= 'rgba(0, 0, 0, 0)',
                         paper_bgcolor= 'rgba(0, 0, 0, 0)',
                     ),
                     config={
-                        'displayModeBar': False
+                        # 'displayModeBar': False
                     }
                 ) 
             ])
@@ -30,7 +34,8 @@ def drawFigure():
     ])
 
 # Text field
-def drawText():
+def draw_sidebar():
+    """Setup sidebar dropdowns / info"""
     return html.Div([
         dbc.Card(
             dbc.CardBody([
@@ -52,7 +57,15 @@ app.layout = html.Div([
     dbc.Row([
         dbc.Navbar(children=[
             html.H4('S&P 500 Dashboard', style=navbar_style),
-            html.A(href='https://github.com/morganlbruce/stock-dashboard', children=[html.Img(src='assets/github-mark-white.svg',  style={'height': '30px', 'align': ''})]),
+            html.A(
+                href='https://github.com/morganlbruce/stock-dashboard',
+                children=[
+                    html.Img(
+                        src='assets/github-mark-white.svg',
+                        style={'height': '30px', 'align': ''}
+                    )
+                ]
+            ),
         ],
         color='primary',
         dark=True,)
@@ -61,12 +74,12 @@ app.layout = html.Div([
         dbc.CardBody([
             dbc.Row([
                 dbc.Col([
-                    drawText()
-                ], width=4),
+                    draw_sidebar()
+                ], width=3),
                 dbc.Col([
-                    drawText()
-                ], width=8),
-            ], align='center'), 
+                    draw_figure()
+                ], width=9),
+            ], align='center'),
             html.Br(),
         ])
     ),
